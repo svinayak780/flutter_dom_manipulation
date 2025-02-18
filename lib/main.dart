@@ -34,16 +34,15 @@ class HomePage extends StatefulWidget {
 
 /// State of a [HomePage].
 class _HomePageState extends State<HomePage> {
-
   /// [TextEditingController] for the URL of the image.
-  TextEditingController urlController = TextEditingController(text: "https://picsum.photos/1000");
+  TextEditingController urlController =
+      TextEditingController(text: "https://picsum.photos/1000");
 
   /// [GlobalKey] for the [ExpandableFabState].
   final _fabKey = GlobalKey<ExpandableFabState>();
 
   /// Toggles the fullscreen mode of the image.
   void toggleFullscreen(web.Event? event) {
-
     /// Finds the image element by id
     var elem = web.document.getElementById("html-image");
     if (elem == null) {
@@ -77,6 +76,7 @@ class _HomePageState extends State<HomePage> {
                     color: Colors.grey,
                     borderRadius: BorderRadius.circular(12),
                   ),
+
                   /// [HtmlElementView] injects the <img> tag into the DOM.
                   child: HtmlElementView.fromTagName(
                     tagName: 'img',
@@ -122,6 +122,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       floatingActionButtonLocation: ExpandableFab.location,
+
       /// [ExpandableFab] to display fullscreen control buttons.
       floatingActionButton: ExpandableFab(
         key: _fabKey,
@@ -152,6 +153,7 @@ class _HomePageState extends State<HomePage> {
             );
           },
         ),
+
         /// Introduces an overlay around the buttons.
         overlayStyle: ExpandableFabOverlayStyle(
           color: Colors.black.withValues(alpha: 0.75),
@@ -184,8 +186,15 @@ class _HomePageState extends State<HomePage> {
               /// Toggle [ExpandableFabState] to close the buttons.
               _fabKey.currentState?.toggle();
 
-              /// Exits fullscreen mode.
-              web.document.fullscreen ? web.document.exitFullscreen() : null;
+              /// Checks if the document is in fullscreen mode.
+              if (web.document.fullscreen) {
+                /// Exits fullscreen mode.
+                web.document.exitFullscreen();
+              } else {
+                /// Shows a snackbar if the document is not in fullscreen mode.
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text("Exited fullscreen")));
+              }
             },
           ),
         ],
